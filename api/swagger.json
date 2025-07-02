@@ -1,0 +1,269 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Service for managing access for users by tokens",
+        "title": "Access Manager",
+        "contact": {},
+        "version": "1.0.0"
+    },
+    "host": "127.0.0.1:50000",
+    "basePath": "/api/v1",
+    "paths": {
+        "/users": {
+            "post": {
+                "description": "Creates user with guid",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "access"
+                ],
+                "summary": "Create user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.Result-views_CreateUserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/deauthorise": {
+            "post": {
+                "description": "Denies access for getting id and refresh tokens",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "access"
+                ],
+                "summary": "Deauthorise user",
+                "parameters": [
+                    {
+                        "description": "Access token",
+                        "name": "access_token",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.AccessTokenController"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.Result-views_DeauthoriseUserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/id": {
+            "post": {
+                "description": "Return user id by access and refresh tokens",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "access"
+                ],
+                "summary": "Get user id",
+                "parameters": [
+                    {
+                        "description": "Access token",
+                        "name": "access_token",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.AccessTokenController"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.Result-views_GetIDResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{user_id}/tokens": {
+            "post": {
+                "description": "Returns access and refresh tokens by user id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "access"
+                ],
+                "summary": "Get tokens",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.Result-views_GetTokensResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{user_id}/tokens/refresh": {
+            "post": {
+                "description": "Returns access and refresh tokens by previous access and refresh tokens",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "access"
+                ],
+                "summary": "Refresh tokens",
+                "parameters": [
+                    {
+                        "description": "Refresh token",
+                        "name": "refresh_token",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.RefreshTokenController"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.Result-views_RefreshTokensResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controllers.AccessTokenController": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.RefreshTokenController": {
+            "type": "object",
+            "properties": {
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "server.Result-views_CreateUserResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "$ref": "#/definitions/views.CreateUserResponse"
+                }
+            }
+        },
+        "server.Result-views_DeauthoriseUserResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "$ref": "#/definitions/views.DeauthoriseUserResponse"
+                }
+            }
+        },
+        "server.Result-views_GetIDResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "$ref": "#/definitions/views.GetIDResponse"
+                }
+            }
+        },
+        "server.Result-views_GetTokensResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "$ref": "#/definitions/views.GetTokensResponse"
+                }
+            }
+        },
+        "server.Result-views_RefreshTokensResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "$ref": "#/definitions/views.RefreshTokensResponse"
+                }
+            }
+        },
+        "views.CreateUserResponse": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "views.DeauthoriseUserResponse": {
+            "type": "object"
+        },
+        "views.GetIDResponse": {
+            "type": "object",
+            "properties": {
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "views.GetTokensResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "views.RefreshTokensResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "refresh_token": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

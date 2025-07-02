@@ -1,0 +1,174 @@
+basePath: /api/v1
+definitions:
+  controllers.AccessTokenController:
+    properties:
+      access_token:
+        type: string
+    type: object
+  controllers.RefreshTokenController:
+    properties:
+      refresh_token:
+        type: string
+    type: object
+  server.Result-views_CreateUserResponse:
+    properties:
+      result:
+        $ref: '#/definitions/views.CreateUserResponse'
+    type: object
+  server.Result-views_DeauthoriseUserResponse:
+    properties:
+      result:
+        $ref: '#/definitions/views.DeauthoriseUserResponse'
+    type: object
+  server.Result-views_GetIDResponse:
+    properties:
+      result:
+        $ref: '#/definitions/views.GetIDResponse'
+    type: object
+  server.Result-views_GetTokensResponse:
+    properties:
+      result:
+        $ref: '#/definitions/views.GetTokensResponse'
+    type: object
+  server.Result-views_RefreshTokensResponse:
+    properties:
+      result:
+        $ref: '#/definitions/views.RefreshTokensResponse'
+    type: object
+  views.CreateUserResponse:
+    properties:
+      user_id:
+        type: string
+    type: object
+  views.DeauthoriseUserResponse:
+    type: object
+  views.GetIDResponse:
+    properties:
+      userID:
+        type: string
+    type: object
+  views.GetTokensResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  views.RefreshTokensResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+host: 127.0.0.1:50000
+info:
+  contact: {}
+  description: Service for managing access for users by tokens
+  title: Access Manager
+  version: 1.0.0
+paths:
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: Creates user with guid
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.Result-views_CreateUserResponse'
+      summary: Create user
+      tags:
+      - access
+  /users/{user_id}/tokens:
+    post:
+      consumes:
+      - application/json
+      description: Returns access and refresh tokens by user id
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.Result-views_GetTokensResponse'
+      summary: Get tokens
+      tags:
+      - access
+  /users/{user_id}/tokens/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Returns access and refresh tokens by previous access and refresh
+        tokens
+      parameters:
+      - description: Refresh token
+        in: body
+        name: refresh_token
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RefreshTokenController'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.Result-views_RefreshTokensResponse'
+      summary: Refresh tokens
+      tags:
+      - access
+  /users/deauthorise:
+    post:
+      consumes:
+      - application/json
+      description: Denies access for getting id and refresh tokens
+      parameters:
+      - description: Access token
+        in: body
+        name: access_token
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.AccessTokenController'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.Result-views_DeauthoriseUserResponse'
+      summary: Deauthorise user
+      tags:
+      - access
+  /users/id:
+    post:
+      consumes:
+      - application/json
+      description: Return user id by access and refresh tokens
+      parameters:
+      - description: Access token
+        in: body
+        name: access_token
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.AccessTokenController'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/server.Result-views_GetIDResponse'
+      summary: Get user id
+      tags:
+      - access
+swagger: "2.0"

@@ -1,0 +1,8 @@
+postgres:
+  connection_url: "postgres://postgres:1234@postgres:5432/access_manager"
+token_generator:
+  secret_key: access
+  access_token_ttl_minutes: 15
+  refresh_token_ttl_minutes: 60
+alert_sender:
+  webhook_url: "http://localhost/"

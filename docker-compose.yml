@@ -1,0 +1,36 @@
+services:
+  access_manager:
+    image: access_manager
+    container_name: access_manager
+    build: .
+    restart: always
+    ports:
+      - "50000:50000"
+    networks:
+      - db
+    volumes:
+      - ./config/config.yml:/app/config/config.yml
+    environment:
+      CONFIG_PATH: /app/config/config.yml
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_DB: access_manager
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./db/migrations/init.up.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - db
+
+networks:
+  db:
+    driver: bridge
